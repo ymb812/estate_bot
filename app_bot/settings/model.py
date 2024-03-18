@@ -4,28 +4,24 @@ from pydantic_settings import SettingsConfigDict
 
 class BotSettings(BaseModel):
     bot_token: SecretStr = fields.Field(max_length=100, alias='TELEGRAM_BOT_TOKEN')
-    payments_provider_token: SecretStr = fields.Field(max_length=100, alias='PAYMENTS_PROVIDER_TOKEN')
     admin_password: SecretStr = fields.Field(max_length=100, alias='ADMIN_PASSWORD')
-    required_chat_id: str = fields.Field(alias='REQUIRED_CHAT_ID')
+    admin_chat_id: str = fields.Field(alias='ADMIN_CHAT_ID')
+    admin_chat_link: str = fields.Field(alias='ADMIN_CHAT_LINK')
     required_channel_id: str = fields.Field(alias='REQUIRED_CHANNEL_ID')
-    orders_per_msg: int = fields.Field(alias='ORDERS_PER_MSG', default=5)
+    welcome_post_id: int = fields.Field(alias='WELCOME_POST_ID')
+    notification_post_id: int = fields.Field(alias='NOTIFICATION_POST_ID')
+    registered_post_id: int = fields.Field(alias='REGISTERED_POST_ID')
 
+class Dialogues(BaseModel):
+    categories_per_page_height: int = fields.Field(alias='CATEGORIES_HEIGHT')
+    categories_per_page_width: int = fields.Field(alias='CATEGORIES_WIDTH')
 
 class Broadcaster(BaseModel):
     mailing_batch_size: int = fields.Field(alias='MAILING_BATCH_SIZE', default=25)
     broadcaster_sleep: int = fields.Field(alias='BROADCASTER_SLEEP', default=1)
 
-
-class Dialogues(BaseModel):
-    categories_per_page_height: int = fields.Field(alias='CATEGORIES_HEIGHT')
-    categories_per_page_width: int = fields.Field(alias='CATEGORIES_WIDTH')
-    products_per_page_height: int = fields.Field(alias='PRODUCTS_HEIGHT')
-    products_per_page_width: int = fields.Field(alias='PRODUCTS_WIDTH')
-
-
 class AppSettings(BaseModel):
     prod_mode: bool = fields.Field(alias='PROD_MODE', default=False)
-    logs_file: str = fields.Field(alias='LOGS_FILE', default='logs_file.txt')
     excel_file: str = fields.Field(alias='EXCEL_FILE', default='Users stats.xlsx')
 
 

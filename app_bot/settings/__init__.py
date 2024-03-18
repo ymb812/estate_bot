@@ -42,10 +42,6 @@ except ValidationError as e:
     _logger.critical(exc_info=e, msg='Env parameters validation')
     sys.exit(-1)
 
-fileHandler = logging.FileHandler(filename=settings.logs_file, mode='a+', encoding='UTF-8')
-fileHandler.setFormatter(formatter)
-root_logger.addHandler(fileHandler)
-
 if settings.prod_mode:
     _logger.info('Start in production mode')
 else:
