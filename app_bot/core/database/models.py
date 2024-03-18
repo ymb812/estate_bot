@@ -3,6 +3,8 @@ import uuid
 from datetime import datetime
 from tortoise import fields, expressions
 from tortoise.models import Model
+from enum import Enum
+
 
 logger = logging.getLogger(__name__)
 
@@ -52,84 +54,28 @@ class User(Model):
 
 class Category(Model):
     class Meta:
-        table = 'categories'
+        table = 'commercial_categories'
         ordering = ['id']
+
+    class ContentType(Enum):
+        budget = 'budget'
+        commercial = 'commercial'
 
     id = fields.IntField(pk=True, index=True)
     name = fields.CharField(max_length=32)
+    content_type = fields.CharEnumField(enum_type=ContentType, default=ContentType.commercial, max_length=128)
 
 
-class SubCategory(Model):
+class Estate(Model):
     class Meta:
-        table = 'subcategories'
+        table = 'estates'
         ordering = ['id']
 
     id = fields.IntField(pk=True, index=True)
-    name = fields.CharField(max_length=32)
-    parent_category = fields.ForeignKeyField(model_name='models.Category', to_field='id', null=True)
-
-
-class Product(Model):
-    class Meta:
-        table = 'products'
-        ordering = ['id']
-
-    id = fields.IntField(pk=True, index=True)
-    name = fields.CharField(max_length=32)
     description = fields.CharField(max_length=1024)
-    price = fields.IntField()
     media_content = fields.CharField(max_length=256, null=True)
-    parent_category = fields.ForeignKeyField(model_name='models.SubCategory', to_field='id', null=True)
-
-
-class UserProduct(Model):
-    class Meta:
-        table = 'products_by_users'
-
-    product = fields.ForeignKeyField('models.Product', to_field='id')
-    user = fields.ForeignKeyField('models.User', to_field='user_id')
-    amount = fields.IntField()
-    order = fields.ForeignKeyField('models.Order', to_field='id', null=True)
-
-    @classmethod
-    async def add_or_update_product_to_the_cart(cls, product_id: int, user_id: int, amount: int) -> "UserProduct":
-        item = await cls.filter(product_id=product_id, user_id=user_id, order_id=None).first()
-        if item:
-            item.amount = expressions.F('amount') + amount
-            await item.save()
-        else:
-            item = await cls.create(product_id=product_id, user_id=user_id, amount=amount)
-
-        return item
-
-
-    # return Product for cart display or return UserProduct for order creating
-    @classmethod
-    async def get_user_cart(cls, user_id: int, return_products: bool = True) -> list[Product or "UserProduct"]:
-        if return_products:
-            return [await product.product for product in await cls.filter(user_id=user_id, order_id=None).all()]
-
-        return [product for product in await cls.filter(user_id=user_id, order_id=None).all()]
-
-
-    @classmethod
-    async def add_cart_to_order(cls, user_id: int, order_id: uuid.UUID):
-        for product in await UserProduct.filter(user_id=user_id, order_id=None).all():
-            product.order_id = order_id
-            await product.save()
-
-
-class Order(Model):
-    class Meta:
-        table = 'orders'
-
-    id = fields.UUIDField(pk=True)
-    user = fields.ForeignKeyField('models.User', to_field='user_id')
-    is_paid = fields.BooleanField(default=False)
-    price = fields.IntField()
-    product_amount = fields.IntField()
-    delivery_data = fields.CharField(max_length=256)
-    created_at = fields.DatetimeField(auto_now_add=True)
+    presentation_id = fields.CharField(max_length=256, null=True)  # TODO: DELETE???
+    parent_category = fields.ForeignKeyField(model_name='models.Category', to_field='id', null=True)
 
 
 class Dispatcher(Model):
@@ -144,19 +90,12 @@ class Dispatcher(Model):
 
 class Post(Model):
     class Meta:
-        table = 'mailings_content'
+        table = 'static_content'
 
     id = fields.BigIntField(pk=True)
-    text = fields.CharField(max_length=256, null=True)
+    text = fields.TextField(null=True)
     photo_file_id = fields.CharField(max_length=256, null=True)
     video_file_id = fields.CharField(max_length=256, null=True)
-    sticker_file_id = fields.CharField(max_length=256, null=True)
-    photo_filename = fields.CharField(max_length=256, null=True)
-    video_filename = fields.CharField(max_length=256, null=True)
-    sticker_filename = fields.CharField(max_length=256, null=True)
+    video_note_id = fields.CharField(max_length=256, null=True)
+    document_file_id = fields.CharField(max_length=256, null=True)
     created_at = fields.DatetimeField(auto_now_add=True)
-
-
-    @classmethod
-    async def get_posts_by_scenario(cls, scenario_id: int):
-        return await cls.filter(id=scenario_id).all()

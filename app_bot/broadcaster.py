@@ -25,16 +25,26 @@ class Broadcaster(object):
 
 
     @staticmethod
+    @staticmethod
     async def __send_content_message(post: Post, user_id: int):
         try:
-            if not post.photo_file_id and not post.video_file_id and not post.sticker_file_id and post.text:
+            if not post.photo_file_id and not post.video_file_id and not post.video_note_id \
+                    and not post.document_file_id and post.text:
                 await bot.send_message(chat_id=user_id, text=post.text)
-            elif post.sticker_file_id:  # sticker
-                await bot.send_sticker(chat_id=user_id, sticker=post.sticker_file_id)
+
             elif post.photo_file_id:  # photo
                 await bot.send_photo(chat_id=user_id, photo=post.photo_file_id, caption=post.text)
+
             elif post.video_file_id:  # video
                 await bot.send_video(chat_id=user_id, video=post.video_file_id, caption=post.text)
+
+            elif post.video_note_id:  # video_note
+                if post.text:
+                    await bot.send_message(chat_id=user_id, text=post.text)
+                await bot.send_video_note(chat_id=user_id, video_note=post.video_note_id)
+
+            elif post.document_file_id:  # document
+                await bot.send_document(chat_id=user_id, document=post.document_file_id, caption=post.text)
             else:
                 logger.error(f'Unexpected content type: post_id={post.id}')
 
