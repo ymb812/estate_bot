@@ -1,7 +1,7 @@
 import asyncio
 import core.middlewares
 from aiogram import Bot, Dispatcher
-from aiogram_dialog import Dialog, Window, setup_dialogs, DialogManager
+from aiogram_dialog import setup_dialogs
 from settings import settings
 from setup import register
 from core.handlers import routers

@@ -54,7 +54,7 @@ class User(Model):
 
 class Category(Model):
     class Meta:
-        table = 'commercial_categories'
+        table = 'categories'
         ordering = ['id']
 
     class ContentType(Enum):
@@ -63,7 +63,7 @@ class Category(Model):
 
     id = fields.IntField(pk=True, index=True)
     name = fields.CharField(max_length=32)
-    content_type = fields.CharEnumField(enum_type=ContentType, default=ContentType.commercial, max_length=128)
+    content_type = fields.CharEnumField(enum_type=ContentType, default=ContentType.commercial, max_length=32)
 
 
 class Estate(Model):
@@ -74,7 +74,6 @@ class Estate(Model):
     id = fields.IntField(pk=True, index=True)
     description = fields.CharField(max_length=1024)
     media_content = fields.CharField(max_length=256, null=True)
-    presentation_id = fields.CharField(max_length=256, null=True)  # TODO: DELETE???
     parent_category = fields.ForeignKeyField(model_name='models.Category', to_field='id', null=True)
 
 
