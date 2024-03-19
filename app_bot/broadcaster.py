@@ -25,7 +25,6 @@ class Broadcaster(object):
 
 
     @staticmethod
-    @staticmethod
     async def __send_content_message(post: Post, user_id: int):
         try:
             if not post.photo_file_id and not post.video_file_id and not post.video_note_id \

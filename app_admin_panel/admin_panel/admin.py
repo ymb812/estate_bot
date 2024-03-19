@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ExportActionModelAdmin, ImportExportModelAdmin
 from import_export.resources import ModelResource
-from admin_panel.models import User, Category, SubCategory, Product, UserProduct, Order, Dispatcher, Post
+from admin_panel.models import User, Category,Estate, Dispatcher, Post
 
 
 class CustomImportExport(ImportExportModelAdmin, ExportActionModelAdmin):
@@ -25,30 +25,13 @@ class UserAdmin(CustomImportExport):
 @admin.register(Category)
 class CategoryAdmin(CustomImportExport):
     list_display = [field.name for field in Category._meta.fields]
-    list_editable = ('name',)
+    list_editable = ('name', 'content_type')
 
 
-@admin.register(SubCategory)
-class SubCategoryAdmin(CustomImportExport):
-    list_display = [field.name for field in SubCategory._meta.fields]
-    list_editable = ('name',)
-
-
-@admin.register(UserProduct)
-class UserProductAdmin(CustomImportExport):
-    list_display = ('id', 'product', 'user')
-    list_display_links = ('id', 'product', 'user')
-
-
-@admin.register(Product)
+@admin.register(Estate)
 class ProductAdmin(CustomImportExport):
-    list_display = [field.name for field in Product._meta.fields]
-    list_editable = [field.name for field in Product._meta.fields if field.name != 'id']
-
-
-@admin.register(Order)
-class OrderAdmin(CustomImportExport):
-    list_display = ('id', 'user_id', 'is_paid', 'created_at')
+    list_display = [field.name for field in Estate._meta.fields]
+    list_editable = [field.name for field in Estate._meta.fields if field.name != 'id']
 
 
 @admin.register(Dispatcher)

@@ -1,7 +1,17 @@
 from aiogram.enums import ContentType
-from core.database.models import Category, Estate
+from core.database.models import Category, Estate, Post
 from aiogram_dialog import DialogManager
 from aiogram_dialog.api.entities import MediaAttachment
+from settings import settings
+
+
+async def get_welcome_msg(dialog_manager: DialogManager, **kwargs):
+    welcome_post = await Post.get(id=settings.welcome_post_id)
+
+    return {
+        'caption': welcome_post.text,
+        'photo': MediaAttachment(ContentType.PHOTO, url=welcome_post.photo_file_id)
+    }
 
 
 async def get_categories(dialog_manager: DialogManager, **kwargs):

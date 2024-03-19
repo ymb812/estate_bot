@@ -3,7 +3,7 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button, Select
 from core.states.catalog import CatalogStateGroup
-from core.database.models import Category, Estate, Post
+from core.database.models import Estate
 from core.utils.texts import _
 from settings import settings
 
@@ -43,6 +43,7 @@ class CallBackHandler:
             value,
     ):
         dialog_manager.dialog_data['phone'] = value
+        estate = await Estate.get_or_none(id=dialog_manager.dialog_data['current_estate_id'])
 
         # send question to admin
         if message.from_user.username:
@@ -51,9 +52,9 @@ class CallBackHandler:
             username = f'<a href="tg://user?id={message.from_user.id}">ссылка</a>'
         await dialog_manager.middleware_data['bot'].send_message(
             chat_id=settings.admin_chat_id,
-            text=_('REQUEST_FROM_USER', username=username, phone=value,
-                   estate_id=dialog_manager.dialog_data['current_estate_id'])
+            text=_('REQUEST_FROM_USER', username=username, phone=value, estate_id=estate.id),
         )
 
-        await message.answer(text=_('INPUT_PHONE_INFO'))
+        if estate.presentation:
+            await message.answer_document(document=estate.presentation)
         await dialog_manager.switch_to(state=CatalogStateGroup.product_interaction)  # go back to the catalog

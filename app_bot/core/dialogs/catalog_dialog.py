@@ -1,6 +1,6 @@
 from aiogram import F
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.text import Const, Format, ScrollingText, List
+from aiogram_dialog.widgets.text import Const, Format
 from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.kbd import PrevPage, NextPage, CurrentPage, Start, Column, StubScroll, Button, Row, \
     FirstPage, LastPage, SwitchTo
@@ -10,7 +10,6 @@ from core.dialogs.callbacks import CallBackHandler
 from core.states.main_menu import MainMenuStateGroup
 from core.states.catalog import CatalogStateGroup
 from core.utils.texts import _
-from settings import settings
 
 
 catalog_dialog = Dialog(

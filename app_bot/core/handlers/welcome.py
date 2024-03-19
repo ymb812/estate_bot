@@ -33,11 +33,5 @@ async def start_handler(message: types.Message, bot: Bot, state: FSMContext, dia
     else:
         await set_user_commands(bot=bot, scope=types.BotCommandScopeChat(chat_id=message.from_user.id))
 
-
-    # send welcome msg from DB
-    welcome_post = await Post.get(id=settings.welcome_post_id)
-    await message.answer_photo(photo=welcome_post.photo_file_id, caption=welcome_post.text)
-
-
     # send main menu
     await dialog_manager.start(state=MainMenuStateGroup.menu, mode=StartMode.RESET_STACK)
