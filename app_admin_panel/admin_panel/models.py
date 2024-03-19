@@ -52,6 +52,7 @@ class Estate(models.Model):
     id = models.IntegerField(primary_key=True, db_index=True)
     description = models.CharField(max_length=1024)
     media_content = models.CharField(max_length=256, null=True, blank=True)
+    presentation = models.CharField(max_length=256, null=True, blank=True)
     parent_category = models.ForeignKey('Category', to_field='id', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
