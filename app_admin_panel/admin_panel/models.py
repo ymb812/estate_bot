@@ -36,7 +36,7 @@ class Category(models.Model):
 
     id = models.AutoField(primary_key=True, db_index=True)
     name = models.CharField(max_length=32)
-    content_type = models.CharField(max_length=32, default=ContentType.commercial)
+    content_type = models.CharField(max_length=32, choices=ContentType, default=ContentType.commercial)
 
     def __str__(self):
         return self.name
