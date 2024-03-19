@@ -3,16 +3,16 @@ version: '3.3'
 services:
   postgres:
     image: 'postgres:13'
-    container_name: bot_with_django_postgres
+    container_name: estate_postgres
     restart: 'always'
     env_file:
       - .env
     ports:
-      - '5433:5432'
+      - '5434:5432'
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
     networks:
-      - bot_with_django_db
+      - estate_db
 
   redis:
     image: redis:latest
@@ -22,29 +22,29 @@ services:
     volumes:
       - ./redis:/root/redis
     networks:
-      - bot_with_django_db
+      - estate_db
 
   web:
     build:
       context: .
       dockerfile: DockerfileAdmin
-    container_name: bot_with_django_django
+    container_name: estate_django
     restart: always
     env_file:
       - .env
     ports:
-      - '8080:8080'
+      - '8000:8000'
     networks:
-      - bot_with_django_db
+      - estate_db
 
   bot:
     build:
       context: .
       dockerfile: DockerfileBot
-    container_name: bot_with_django_bot
+    container_name: estate_bot
     restart: 'always'
     networks:
-      - bot_with_django_db
+      - estate_db
     depends_on:
       - postgres
     env_file:
@@ -54,14 +54,14 @@ services:
     build:
       context: .
       dockerfile: DockerfileBroadcaster
-    container_name: bot_with_django_broadcaster
+    container_name: estate_broadcaster
     restart: 'always'
     networks:
-      - bot_with_django_db
+      - estate_db
     depends_on:
       - postgres
     env_file:
       - .env
 
 networks:
-  bot_with_django_db:
+  estate_db:

@@ -1,3 +1,5 @@
+from aiogram import Bot
+from aiogram.utils.i18n import I18n
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.text import Const, Format
 from aiogram_dialog.widgets.kbd import Column, Url, SwitchTo, Select
@@ -7,6 +9,11 @@ from core.dialogs.custom_content import CustomPager
 from core.dialogs.callbacks import CallBackHandler
 from core.dialogs.getters import get_categories
 from settings import settings
+
+
+bot = Bot(settings.bot_token.get_secret_value(), parse_mode='HTML')
+i18n = I18n(path='locales', default_locale='ru', domain='messages')
+i18n.set_current(i18n)
 
 
 main_menu_dialog = Dialog(
